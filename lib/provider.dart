@@ -19,7 +19,7 @@ class data extends ChangeNotifier {
   ];
   math.Random rand = new math.Random();
   List<note> items = new List<note>();
-  static bool isLoading = false;
+  bool isLoading = false;
   Future<bool> initialize() async {
     isLoading = true;
     notifyListeners();
@@ -45,6 +45,7 @@ class data extends ChangeNotifier {
 
     isLoading = false;
     notifyListeners();
+    return Future.value(true);
   }
 
   insert(body) async {

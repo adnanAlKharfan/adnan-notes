@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import './notes_page.dart';
+import 'package:notes/splach_screen.dart';
+
 import 'package:provider/provider.dart';
 
 import './provider.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
               cursorColor: Colors.black),
           routes: {
             '/': (context) {
-              return MyHomePage();
+              return splash_screen();
             }
           },
         ));

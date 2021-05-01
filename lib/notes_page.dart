@@ -1,10 +1,8 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:notes/note_page.dart';
 
 import 'package:provider/provider.dart';
-import 'package:splashscreen/splashscreen.dart';
+
 import './provider.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -15,18 +13,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool cancel = false;
   data r = data();
-  bool e = true;
+
   @override
   void initState() {
     // TODO: implement initState
 
     super.initState();
-    if (e) {
-      e = false;
-      Timer(Duration(seconds: 1), () {
-        Provider.of<data>(context, listen: false).initialize();
-      });
-    }
   }
 
   Widget itemCard(int i, String title, Color color, context) {
@@ -111,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   TextStyle(fontSize: MediaQuery.of(context).size.width * 0.1),
             ),
           ),
-          body: data.isLoading
+          body: Provider.of<data>(context, listen: true).isLoading
               ? Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                   padding: EdgeInsets.all(10.0),
@@ -121,13 +113,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: Provider.of<data>(context, listen: false)
                         .items
                         .map((item) =>
-                            itemCard(item.id, item.body, item.c, context))
+                            itemCard(item.id, item.body, item.c, this.context))
                         .toList()
                         .cast<Widget>(),
                   )),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              Navigator.of(this.context)
+                  .push(MaterialPageRoute(builder: (context) {
                 return note_page(
                     model: Provider.of<data>(context, listen: false),
                     c: Provider.of<data>(context, listen: false).cs[
