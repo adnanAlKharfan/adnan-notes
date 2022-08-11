@@ -24,7 +24,8 @@ class _note_page extends State<note_page> {
 
     bodyController.text = widget.body;
     p = international.Bidi.detectRtlDirectionality(bodyController.text);
-
+    bodyController.selection = TextSelection.fromPosition(
+        TextPosition(offset: bodyController.text.length));
     super.initState();
   }
 
@@ -64,15 +65,14 @@ class _note_page extends State<note_page> {
                 autofocus: true,
                 controller: bodyController,
                 onChanged: (v) {
-                  if (f) {
-                    setState(() {
-                      f = false;
+                  setState(() {
+                    if (f) {
                       p = international.Bidi.detectRtlDirectionality(
                           bodyController.text);
-                    });
-                  } else if (bodyController.text.trim() == "") {
-                    f = true;
-                  }
+                      f = false;
+                    }
+                    if (bodyController.text.trim() == "") f = true;
+                  });
                 },
               ),
             )));

@@ -4,6 +4,7 @@ import 'package:notes/note_page.dart';
 import 'package:provider/provider.dart';
 
 import './provider.dart';
+import 'package:intl/intl.dart' as international;
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool cancel = false;
   data r = data();
-
+  bool right = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -47,12 +48,18 @@ class _MyHomePageState extends State<MyHomePage> {
           Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10.0), color: color),
-            width: MediaQuery.of(context).size.width > 350
-                ? MediaQuery.of(context).size.width * 0.46
-                : MediaQuery.of(context).size.width * 0.36,
-            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width * 0.46,
+            height: MediaQuery.of(context).size.height > 800
+                ? MediaQuery.of(context).size.height * 0.1
+                : MediaQuery.of(context).size.height * 0.2,
             padding: EdgeInsets.all(10.0),
-            child: Text(title),
+            child: Text(
+              title,
+              textDirection:
+                  international.Bidi.detectRtlDirectionality(title[0])
+                      ? TextDirection.rtl
+                      : TextDirection.ltr,
+            ),
           ),
           cancel
               ? Material(
@@ -88,7 +95,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Scaffold(
           backgroundColor: Colors.black,
           appBar: AppBar(
-            toolbarHeight: MediaQuery.of(context).size.height * 0.1,
+            toolbarHeight: MediaQuery.of(context).size.height > 800
+                ? MediaQuery.of(context).size.height * 0.1
+                : MediaQuery.of(context).size.height * 0.3,
             leadingWidth: MediaQuery.of(context).size.width,
             backgroundColor: Colors.transparent,
             elevation: 10.0,
@@ -102,21 +111,31 @@ class _MyHomePageState extends State<MyHomePage> {
               style:
                   TextStyle(fontSize: MediaQuery.of(context).size.width * 0.1),
             ),
+            centerTitle: true,
           ),
           body: Provider.of<data>(context, listen: true).isLoading
               ? Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
-                  padding: EdgeInsets.all(10.0),
-                  child: Wrap(
-                    runSpacing: 10.0,
-                    spacing: MediaQuery.of(context).size.height * 0.01,
-                    children: Provider.of<data>(context, listen: false)
-                        .items
-                        .map((item) =>
-                            itemCard(item.id, item.body, item.c, this.context))
-                        .toList()
-                        .cast<Widget>(),
-                  )),
+                  physics: PageScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics()),
+                  padding: EdgeInsets.only(
+                    top: 10.0,
+                    bottom: 10.0,
+                    left: MediaQuery.of(context).size.width * 0.03,
+                    right: MediaQuery.of(context).size.width * 0.03,
+                  ),
+                  child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        runSpacing: 10.0,
+                        children: Provider.of<data>(context, listen: false)
+                            .items
+                            .map((item) => itemCard(
+                                item.id, item.body, item.c, this.context))
+                            .toList()
+                            .cast<Widget>(),
+                      ))),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               Navigator.of(this.context)

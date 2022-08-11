@@ -15,8 +15,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(
-        [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
     return ChangeNotifierProvider<data>(
         create: (context) => model,
         child: MaterialApp(
@@ -24,8 +22,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
               backgroundColor: Colors.black,
               primarySwatch: Colors.blue,
-              buttonColor: Colors.white,
-              cursorColor: Colors.black),
+              buttonColor: Colors.white),
           routes: {
             '/': (context) {
               return splash_screen();
